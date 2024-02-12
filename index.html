@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="style.css" />
+
+		<title>Интерактивная галерея</title>
+	</head>
+
+	<body>
+		<header>
+			<h1>Интерактивная галерея</h1>
+		</header>
+
+		<div class="container">
+			<!-- Строка поиска нужного фото по его номеру -->
+			<div class="search-bar">
+				<label for="photo-number">Введите номер фото:</label>
+				<input type="text" id="photo-number" />
+				<button class="btn2" onclick="openPhoto()">Открыть фото</button>
+			</div>
+			<!-- Основные фото галереи -->
+			<div class="img-container">
+				<div class="img">
+					<img src="img/1.jpg" alt="image" />
+				</div>
+
+				<div class="img">
+					<img src="img/2.jpg" alt="image" />
+				</div>
+
+				<div class="img">
+					<img src="img/3.jpg" alt="image" />
+				</div>
+
+				<div class="img">
+					<img src="img/4.jpg" alt="image" />
+				</div>
+
+				<div class="img">
+					<img src="img/5.jpg" alt="image" />
+				</div>
+
+				<div class="img">
+					<img src="img/6.jpg" alt="image" />
+				</div>
+			</div>
+			<!-- Открывание нужного фото и внутренние кнопки -->
+			<div class="pop-up">
+				<span class="close-btn">&times;</span>
+				<span class="prev">&lt;</span>
+				<img src="img/5.jpg" alt="image" />
+				<span class="next">&gt;</span>
+			</div>
+			<!-- Кнопка переключения тем (светлая(по уполчанию)и темная) -->
+			<div class="btn-container">
+				<button class="btn">Переключить режим</button>
+			</div>
+		</div>
+
+		<script>
+			//Навигация по номерам
+			function openPhoto() {
+				let inputNumber = document.getElementById('photo-number').value
+				let imgElements = document.querySelectorAll('.img-container img')
+
+				if (inputNumber >= 1 && inputNumber <= imgElements.length) {
+					let selectedImg = imgElements[inputNumber - 1]
+					document.querySelector('.pop-up').style.display = 'block'
+					document.querySelector('.pop-up img').src =
+						selectedImg.getAttribute('src')
+				} else {
+					alert('Фото с указанным номером не найдено.')
+				}
+			}
+			//Приветствие и прощание
+			window.onload = () => {
+				alert('Добро пожаловать! Наслаждайтесь галереей изображений природы.')
+			}
+
+			window.addEventListener('unload', function (event) {
+				alert('До свидания! Надеемся, что вам понравилась галерея.')
+			})
+			//Открывание фото
+			document.querySelectorAll('.img-container img').forEach(img => {
+				img.onclick = () => {
+					document.querySelector('.pop-up').style.display = 'block'
+					document.querySelector('.pop-up img').src = img.getAttribute('src')
+				}
+			})
+
+			document.querySelector('.pop-up span').onclick = () => {
+				document.querySelector('.pop-up').style.display = 'none'
+			}
+			//Переключатель тем
+			function darkmode() {
+				const body = document.body
+				const wasDarkmode = localStorage.getItem('darkmode') === 'true'
+				localStorage.setItem('darkmode', !wasDarkmode)
+				body.classList.toggle('dark-mode', !wasDarkmode)
+			}
+			document.querySelector('.btn').addEventListener('click', darkmode)
+			//Слайдер пролистывания
+
+			document.addEventListener('DOMContentLoaded', function () {
+				// Находим элементы DOM
+				const popUp = document.querySelector('.pop-up')
+				const closeBtn = popUp.querySelector('.close-btn')
+				const prevBtn = popUp.querySelector('.prev')
+				const nextBtn = popUp.querySelector('.next')
+				const image = popUp.querySelector('img')
+
+				// Массив с путями к изображениям
+				const imagePaths = [
+					'img/1.jpg',
+					'img/2.jpg',
+					'img/3.jpg',
+					'img/4.jpg',
+					'img/5.jpg',
+					'img/6.jpg',
+				]
+
+				let currentImageIndex = 0
+
+				// Функция для обновления изображения
+				function updateImage() {
+					image.src = imagePaths[currentImageIndex]
+				}
+
+				// Обработчик клика по стрелке "назад"
+				prevBtn.addEventListener('click', function () {
+					currentImageIndex =
+						(currentImageIndex - 1 + imagePaths.length) % imagePaths.length
+					updateImage()
+				})
+
+				// Обработчик клика по стрелке "вперед"
+				nextBtn.addEventListener('click', function () {
+					currentImageIndex = (currentImageIndex + 1) % imagePaths.length
+					updateImage()
+				})
+
+				// Обработчик клика по крестику закрытия
+				closeBtn.addEventListener('click', function () {
+					popUp.style.display = 'none' // Закрываем pop-up
+				})
+
+				// Открываем pop-up при клике на изображение
+				image.addEventListener('click', function () {
+					popUp.style.display = 'block'
+					updateImage()
+				})
+			})
+		</script>
+	</body>
+</html>
